@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>背單字軟體</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 標題 -->
+        <header class="header">
+            <h1>📚 背單字軟體</h1>
+            <p class="subtitle">輕鬆掌握英文單詞</p>
+        </header>
+
+        <!-- 進度顯示 -->
+        <div class="progress-info">
+            <span>第 <span id="current-index">1</span> / <span id="total-count">0</span> 個單字</span>
+        </div>
+
+        <!-- 詞卡容器 -->
+        <div class="card-container">
+            <div class="flip-card" id="flipCard">
+                <div class="flip-card-inner">
+                    <!-- 正面 -->
+                    <div class="flip-card-front">
+                        <div class="word-display">
+                            <h2 id="word-english">Word</h2>
+                            <div class="pronunciation">
+                                <span id="pronunciation-uk">UK: /wɜːd/</span>
+                                <button class="play-btn uk-play" title="英式發音">🔊 UK</button>
+                            </div>
+                            <div class="pronunciation">
+                                <span id="pronunciation-us">US: /wɜːrd/</span>
+                                <button class="play-btn us-play" title="美式發音">🔊 US</button>
+                            </div>
+                        </div>
+                        <div class="click-hint">點擊翻面查看釋義</div>
+                    </div>
+
+                    <!-- 背面 -->
+                    <div class="flip-card-back">
+                        <div class="word-content">
+                            <h3 id="word-meaning">Meaning</h3>
+                            <div class="word-info">
+                                <div class="part-of-speech">
+                                    <strong>詞性：</strong>
+                                    <span id="word-pos">n.</span>
+                                </div>
+                                <div class="word-root">
+                                    <strong>字首/字根：</strong>
+                                    <span id="word-root">-</span>
+                                </div>
+                                <div class="example">
+                                    <strong>例句：</strong>
+                                    <p id="word-example">Example sentence here.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="click-hint">點擊翻回正面</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 控制按鈕 -->
+        <div class="controls">
+            <button class="nav-btn prev-btn" id="prevBtn">← 上一個</button>
+            <button class="flip-btn" id="flipBtn">翻面</button>
+            <button class="nav-btn next-btn" id="nextBtn">下一個 →</button>
+        </div>
+
+        <!-- 鍵盤提示 -->
+        <div class="keyboard-hints">
+            <span>⌨️ 按 Space 翻面 | ← 上一個 | → 下一個</span>
+        </div>
+    </div>
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <p class="progress-text" id="progress-text">0%</p>
+                </div>
+
+                <div class="actions-grid">
+                    <button class="btn btn-primary" id="start-learning-btn">開始學習</button>
+                    <button class="btn btn-secondary" id="quick-review-btn">快速複習</button>
+                    <button class="btn btn-secondary" id="export-btn">匯出數據</button>
+                    <button class="btn btn-danger" id="import-btn">匯入數據</button>
+                </div>
+
+                <div class="recent-section">
+                    <h3>最近學習的單字</h3>
+                    <div class="recent-words-list" id="recent-words-list">
+                        <p class="empty-message">暫無最近學習的單字</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 學習頁面 -->
+            <section class="view hidden" id="learning-view">
+                <div class="learning-container">
+                    <div class="learning-header">
+                        <h2>單字學習</h2>
+                        <div class="learning-progress">
+                            <span id="current-index">0</span> / <span id="total-index">0</span>
+                        </div>
+                    </div>
+
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">全部</button>
+                        <button class="filter-btn" data-filter="new">新單字</button>
+                        <button class="filter-btn" data-filter="review">待複習</button>
+                        <button class="filter-btn" data-filter="learned">已學習</button>
+                    </div>
+
+                    <div class="card-container">
+                        <div class="word-card" id="word-card">
+                            <div class="card-front">
+                                <p>載入中...</p>
+                            </div>
+                            <div class="card-back" style="display: none;">
+                                <p>點擊卡片查看答案</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="audio-controls">
+                        <button class="btn-icon" id="pronounce-btn" title="發音">
+                            🔊
+                        </button>
+                    </div>
+
+                    <div class="learning-actions">
+                        <button class="btn btn-secondary" id="prev-btn">上一個</button>
+                        <button class="btn btn-primary" id="mark-learned-btn">標記為已學習</button>
+                        <button class="btn btn-secondary" id="next-btn">下一個</button>
+                    </div>
+
+                    <div class="word-details">
+                        <h3>單字詳情</h3>
+                        <div id="word-info">
+                            <p class="empty-message">暫無單字</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 新增單字頁面 -->
+            <section class="view hidden" id="add-words-view">
+                <div class="add-words-container">
+                    <h2>新增單字</h2>
+
+                    <div class="add-form">
+                        <div class="form-group">
+                            <label for="word-input">英文單字 *</label>
+                            <input type="text" id="word-input" placeholder="輸入英文單字" required>
+                            <small id="word-error" class="error-message"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pronunciation-input">音標</label>
+                            <input type="text" id="pronunciation-input" placeholder="例如: /dɪk'ʃəneri/">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="meaning-input">中文定義 *</label>
+                            <textarea id="meaning-input" placeholder="輸入中文定義" rows="3" required></textarea>
+                            <small id="meaning-error" class="error-message"></small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="example-input">例句</label>
+                            <textarea id="example-input" placeholder="輸入例句" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="example-zh-input">例句中文翻譯</label>
+                            <textarea id="example-zh-input" placeholder="輸入例句中文翻譯" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category-input">分類</label>
+                            <input type="text" id="category-input" placeholder="例如: 日常用語、商業英文">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="difficulty-input">難度</label>
+                            <select id="difficulty-input">
+                                <option value="easy">簡單</option>
+                                <option value="medium" selected>中等</option>
+                                <option value="hard">困難</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary" id="add-word-btn">新增單字</button>
+                            <button class="btn btn-secondary" id="clear-form-btn">清除</button>
+                            <button class="btn btn-secondary" id="batch-add-btn">批量新增</button>
+                        </div>
+                    </div>
+
+                    <div class="batch-add-section" style="display: none;">
+                        <h3>批量新增單字</h3>
+                        <p class="helper-text">每行格式: 英文單字 | 中文定義 | 例句（可選）</p>
+                        <textarea id="batch-input" placeholder="apple | 蘋果 | An apple a day keeps the doctor away.&#10;book | 書籍 | I read a book every day." rows="10"></textarea>
+                        <div class="form-actions">
+                            <button class="btn btn-primary" id="submit-batch-btn">批量新增</button>
+                            <button class="btn btn-secondary" id="cancel-batch-btn">取消</button>
+                        </div>
+                    </div>
+
+                    <div class="words-list-section">
+                        <h3>已有單字列表</h3>
+                        <div class="search-bar">
+                            <input type="text" id="search-words" placeholder="搜尋單字...">
+                        </div>
+                        <div class="words-list" id="words-list">
+                            <p class="empty-message">暫無單字</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 統計頁面 -->
+            <section class="view hidden" id="statistics-view">
+                <div class="statistics-container">
+                    <h2>學習統計</h2>
+
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-title">今日學習</div>
+                            <div class="stat-value" id="today-learned">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-title">本週學習</div>
+                            <div class="stat-value" id="week-learned">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-title">本月學習</div>
+                            <div class="stat-value" id="month-learned">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-title">總學習時間</div>
+                            <div class="stat-value" id="total-time">0分鐘</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>每日學習統計</h3>
+                        <div class="chart-container" id="chart-container">
+                            <canvas id="learning-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="difficulty-stats">
+                        <h3>難度分布</h3>
+                        <div class="difficulty-bars">
+                            <div class="difficulty-bar">
+                                <div class="difficulty-label">簡單</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" id="easy-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="bar-count" id="easy-count">0</div>
+                            </div>
+                            <div class="difficulty-bar">
+                                <div class="difficulty-label">中等</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" id="medium-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="bar-count" id="medium-count">0</div>
+                            </div>
+                            <div class="difficulty-bar">
+                                <div class="difficulty-label">困難</div>
+                                <div class="bar-container">
+                                    <div class="bar-fill" id="hard-bar" style="width: 0%"></div>
+                                </div>
+                                <div class="bar-count" id="hard-count">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="actions-section">
+                        <button class="btn btn-secondary" id="reset-stats-btn">重置統計</button>
+                        <button class="btn btn-secondary" id="export-stats-btn">匯出統計</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 隱藏的檔案輸入 -->
+    <input type="file" id="file-input" style="display: none;" accept=".json">
+
+    <!-- 模態框 -->
+    <div class="modal" id="confirmation-modal" style="display: none;">
+        <div class="modal-content">
+            <h3 id="modal-title">確認</h3>
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="modal-cancel">取消</button>
+                <button class="btn btn-primary" id="modal-confirm">確認</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
