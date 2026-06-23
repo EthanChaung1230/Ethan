@@ -1,4 +1,4 @@
-const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx_-UWPuU8EaZveHn8lC2llZ8okX0FF4JJ9_cuQH8bz-Kv_JQO1671wvhYbepOw8voCMg/exec';
+const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxD_Mvvst_In5QwrVbp-Dj361aUTHUIsKDWXApQDQDMQtV0bO11-gmGD5S-LOd4o1A5qA/exec';
                          
 const DEFAULT_SECONDS = 25 * 60; // 25 minutes in seconds
 
@@ -108,11 +108,18 @@ async function sendTaskToGAS(task) {
     return { success: false, message: '請在 script.js 中填入 GAS_WEB_APP_URL。' };
   }
 
+  // 使用 FormData 送出以避免瀏覽器發出 CORS 預檢 (preflight)
+  const form = new FormData();
+  form.append('name', task.name || '');
+  form.append('memo', task.memo || '');
+  form.append('estimate', task.estimate || '');
+  form.append('history', String(task.history || 0));
+  form.append('note', task.note || '');
+
   const response = await fetch(GAS_WEB_APP_URL, {
     method: 'POST',
     mode: 'cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(task)
+    body: form
   });
 
   if (!response.ok) {
